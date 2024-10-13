@@ -123,3 +123,6 @@ work_dirs/
 *.py~
 *.sh~
 
+_run_test.sh
+projects/configs/co_dino/_co_dino_5scale_swin_large_16e_o365tococo_hw1.py
+_run_train.sh

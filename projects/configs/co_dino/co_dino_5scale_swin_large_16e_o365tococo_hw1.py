@@ -2,7 +2,7 @@ _base_ = [
     'co_dino_5scale_r50_1x_coco.py'
 ]
 
-load_from = '/tmp2/shuxian/cvpdl/hw1_109504502/Co-DETR/co_dino_5scale_swin_large_16e_o365tococo.pth'
+load_from = 'co_dino_5scale_swin_large_16e_o365tococo.pth'
 pretrained = None
 num_dec_layer = 6
 lambda_2 = 2.0
@@ -159,7 +159,7 @@ test_pipeline = [
 
 
 dataset_type = 'CocoDataset'
-data_root = '/project/n/shuxian/cvpdl_hw1_dataset/'
+data_root = 'your_dataset_root_folder/'
 
 classes = ("person", "ear", "ear-mufs", "face", "face-guard", "face-mask", "foot", "tool", "glasses", "gloves", "helmet", "hands", "head", "medical-suit", "shoes", "safety-suit", "safety-vest")
 data = dict(
@@ -181,8 +181,8 @@ data = dict(
     test=dict(
         type=dataset_type,
         classes=classes,
-        ann_file=data_root + 'annotations/val.json',
-        img_prefix=data_root + 'valid/images/',
+        ann_file=data_root + 'annotations/test.json',
+        img_prefix=data_root + 'test/images/',
         pipeline=test_pipeline))
 
 # optimizer
