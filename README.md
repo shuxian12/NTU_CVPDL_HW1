@@ -72,12 +72,8 @@ cvpdl_hw1/
 ├── valid/
 │   ├──images/
 │   └──labels/
-├── test/
-│   └──images/
-└── annotations/
-    ├── test.json
-    ├── train.json
-    └── val.json
+└── test/
+    └──images/
 ```
 2. Then, you should edit the dataset path in the `projects/configs/co_dino/co_dino_5scale_swin_large_16e_o365tococo_hw1.py` file.
 * In line 162
