@@ -52,22 +52,48 @@ pip install mmcv-full==1.5.0 -f https://download.openmmlab.com/mmcv/dist/cu113/t
 mode = #'train' or 'test'
 input_dir = f'your_dataset_root_folder/cvpdl_hw1/{mode}/'
 output_dir = # 'your_output_dir'
+# -> your output annotation file will be like {mode}.json
 ```
 * Run the script
 ```bash
 python covert_dataset_to_annotaions.py
 ```
-
-2. you should edit the dataset path in the `projects/configs/co_dino/co_dino_5scale_swin_large_16e_o365tococo_hw1.py` file.
+* put the output file `val.json`, `train.json`, `test.json` in the `your_dataset_root_folder/cvpdl_hw1/annotations` folder.
+* Take the cvpdl_hw1 dataset as an example, the folder structure should be like this:
+```bash
+cvpdl_hw1/
+├── annotations/
+│   ├── test.json
+│   ├── train.json
+│   └── val.json
+├── train/
+│   ├──images/
+│   └──labels/
+├── valid/
+│   ├──images/
+│   └──labels/
+├── test/
+│   └──images/
+└── annotations/
+    ├── test.json
+    ├── train.json
+    └── val.json
+```
+2. Then, you should edit the dataset path in the `projects/configs/co_dino/co_dino_5scale_swin_large_16e_o365tococo_hw1.py` file.
 * In line 162
 ```python
-data_root='/path/to/your/dataset' #e.g. 'your/path/cvpdl_hw1_dataset/'
+data_root='/path/to/your/dataset' #e.g. 'your/path/cvpdl_hw1/' or absolute path
 ```
 
 ### Pretrained Model
 
 * Dowload link: [co_dino_5scale_swin_large_16e_o365tococo.pth](https://drive.google.com/file/d/1ffDz9lGNAjEF7iXzINZezZ4alx6S0KcO/view?usp=share_link)
 * Put the pretrained model in the root folder.
+```bash
+NTU_CVPDL_HW1/
+├── co_dino_5scale_swin_large_16e_o365tococo.pth
+├── ...
+```
 
 ### Train
 ```bash
@@ -76,30 +102,32 @@ data_root='/path/to/your/dataset' #e.g. 'your/path/cvpdl_hw1_dataset/'
 * The output log and checkpoints will be saved in the `work_dirs/co_dino_5scale_swin_large_16e_o365tococo_hw1` folder.
 
 ### Test
-1. Change the `checkpoint` path in the `run_test.sh` file.
-```bash
-# since the best epoch is 14
-checkpoint=$testing_folder/epoch_14.pth
-```
+1. Change the `checkpoint` path in the `run_test.sh` file, and the default path is the best epoch 14,(you can change it to other epochs).
+  ```bash
+  # since the best epoch is 14
+  checkpoint=$testing_folder/epoch_14.pth
+  ```
 2. Run the test script, and the result will be saved in the `work_dirs/test/results.pkl` file.
-```bash
-. run_test.sh
-```
+  ```bash
+  . run_test.sh
+  ```
+* If you want to change the output path, you can edit the **`--out`** parameter in `run_test.sh` file.
 
-* If  you want to change the output path, you can edit the `--out` parameter in `run_test.sh` file.
-
-3. If you want to get the valid dataset result, you should change the `test` of `data` in the `work_dirs/co_dino_5scale_swin_large_16e_o365tococo_hw1/co_dino_5scale_swin_large_16e_o365tococo_hw1.py` file. Then run **step 2** again.
+3. If you want to get the valid dataset predicted result, you should change the `test` of `data` in the `work_dirs/co_dino_5scale_swin_large_16e_o365tococo_hw1/co_dino_5scale_swin_large_16e_o365tococo_hw1.py` file. 
+> The eaiest way is to copy the `val` config and change the `ann_file` and `img_prefix` to the valid dataset path.
 ```python
 test=dict(
         type='CocoDataset',
-        ann_file='{your valid annotation file}',
+        ann_file= # 'same as the val config',
         img_prefix='{your dataset of valid folder}/images/',
         pipeline=...
     )
 ```
+4. Then run **step 2** again.
 
-4. Covert the result to the submission format.
+5. Covert the result to the submission format.
 ```sh
 python covert_result_to_submission.py \ 
-  --config work_dirs/co_dino_5scale_swin_large_16e_o365tococo_hw1/co_dino_5scale_swin_large_16e_o365tococo_hw1.py --input_pkl work_dirs/test/results.pkl  --output work_dirs/test/results.json
+      --config work_dirs/co_dino_5scale_swin_large_16e_o365tococo_hw1/co_dino_5scale_swin_large_16e_o365tococo_hw1.py \
+      --input_pkl work_dirs/test/results.pkl  --output work_dirs/test/results.json
 ```
